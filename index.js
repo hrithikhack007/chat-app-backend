@@ -7,6 +7,7 @@ const app = express();
 const port = process.env.PORT || 4500;
 
 const users = [{}];
+const hbeat = [];
 
 app.use(cors());
 
@@ -27,10 +28,12 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("userJoined", {
       user: "Admin",
       message: `${users[socket.id]} has joined`,
+      action: "join",
     });
     socket.emit("welcome", {
       user: "Admin",
       message: `Welcome to the chat ${users[socket.id]}`,
+      action: "welcome",
     });
   });
 
@@ -42,12 +45,13 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.on("disconnected", () => {
+  socket.on("disconnect", () => {
+    console.log(`${users[socket.id]} left`);
     socket.broadcast.emit(`leave`, {
       user: "Admin",
       message: `${users[socket.id]} has left`,
+      action: "leave",
     });
-    console.log(`${users[socket.id]} left`);
   });
 });
 
