@@ -64,7 +64,7 @@ io.on("connection", (socket) => {
       user: getCurrentUser(id).user,
       message,
       id,
-      time: moment().format("h:mm a"),
+      time: moment().utcOffset("+05:30").format("h:mm a"),
     });
   });
 
